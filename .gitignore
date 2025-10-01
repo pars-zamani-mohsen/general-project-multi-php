@@ -1,0 +1,27 @@
+# Docker volumes
+mysql_data/
+
+# Project files (optional - uncomment if you don't want to track projects)
+# projects/*
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp

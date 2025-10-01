@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: php-dev-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - php-dev-network
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: php-dev-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - php-dev-network
+
+  # PHP 8.3 with Apache
+  php83:
+    build:
+      context: .
+      dockerfile: Dockerfile.php83
+    container_name: php-dev-83
+    restart: unless-stopped
+    ports:
+      - "8083:80"
+    volumes:
+      - ./projects:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - mysql
+    networks:
+      - php-dev-network
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+
+  # PHP 8.1 with Apache
+  php81:
+    build:
+      context: .
+      dockerfile: Dockerfile.php81
+    container_name: php-dev-81
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./projects:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - mysql
+    networks:
+      - php-dev-network
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+
+  # PHP 7.4 with Apache
+  php74:
+    build:
+      context: .
+      dockerfile: Dockerfile.php74
+    container_name: php-dev-74
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - ./projects:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - mysql
+    networks:
+      - php-dev-network
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+
+volumes:
+  mysql_data:
+
+
+networks:
+  php-dev-network:
+    driver: bridge

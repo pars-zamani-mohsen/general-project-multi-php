@@ -2,7 +2,7 @@
 mysql_data/
 
 # Project files (optional - uncomment if you don't want to track projects)
-# projects/*
+projects/*
 
 # Logs
 *.log

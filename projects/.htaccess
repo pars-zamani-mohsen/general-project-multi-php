@@ -1,0 +1,28 @@
+# Set index file priority
+DirectoryIndex index.php index.html
+
+# Disable directory browsing
+Options -Indexes
+
+# Enable rewrite engine
+RewriteEngine On
+
+# For Laravel projects, redirect to their public directory
+RewriteCond %{REQUEST_URI} ^/kavosh/(.*)$
+RewriteRule ^kavosh/(.*)$ kavosh/public/$1 [L,R=301]
+
+# For other Laravel projects, you can add similar rules here
+# RewriteCond %{REQUEST_URI} ^/other-project/(.*)$
+# RewriteCond %{REQUEST_URI} !^/other-project/public/
+# RewriteRule ^other-project/(.*)$ other-project/public/$1 [L,R=301]
+
+# If the request is for a file that exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# If the request is for a directory that exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# For root directory, redirect to dashboard
+RewriteRule ^$ dashboard/ [L,R=301]
